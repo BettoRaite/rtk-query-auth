@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const signupUser = createAsyncThunk(
   'users/signupUser',
+  // async thunk accepts user credentials
   async ({ name, email, password }, thunkAPI) => {
     try {
       const response = await fetch(
@@ -12,6 +13,7 @@ export const signupUser = createAsyncThunk(
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
+          // sending credentials to auth server
           body: JSON.stringify({
             name,
             email,
@@ -21,7 +23,7 @@ export const signupUser = createAsyncThunk(
       );
       let data = await response.json();
       console.log('data', data);
-
+      // access token, typically would not be stored in local storage since it's a bad practice
       if (response.status === 200) {
         localStorage.setItem('token', data.token);
         return { ...data, username: name, email: email };
@@ -56,6 +58,7 @@ export const loginUser = createAsyncThunk(
       let data = await response.json();
       console.log('response', data);
       if (response.status === 200) {
+        // access token
         localStorage.setItem('token', data.token);
         return data;
       } else {
@@ -78,6 +81,7 @@ export const fetchUserBytoken = createAsyncThunk(
           method: 'GET',
           headers: {
             Accept: 'application/json',
+            // idk why put token inside of http req headers
             Authorization: token,
             'Content-Type': 'application/json',
           },
@@ -101,8 +105,10 @@ export const fetchUserBytoken = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
+    // too many fields.
     username: '',
     email: '',
+    // can't just replace by one state field? oh shh it's not ts.
     isFetching: false,
     isSuccess: false,
     isError: false,
