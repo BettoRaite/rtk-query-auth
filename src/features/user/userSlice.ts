@@ -49,7 +49,7 @@ export const signupUser = createAppAsyncThunk(
         message: e.response.message,
       });
     }
-  },
+  }
 );
 
 export const loginUser = createAsyncThunk(
@@ -79,7 +79,7 @@ export const loginUser = createAsyncThunk(
       console.log("Error", e.response.data);
       thunkAPI.rejectWithValue(e.response.data);
     }
-  },
+  }
 );
 
 export const fetchUserBytoken = createAsyncThunk(
@@ -96,7 +96,7 @@ export const fetchUserBytoken = createAsyncThunk(
             Authorization: token,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       const data = await response.json();
       console.log("data", data, response.status);
@@ -104,12 +104,12 @@ export const fetchUserBytoken = createAsyncThunk(
       if (response.status === 200) {
         return { ...data };
       }
-      thunkAPI.rejectWithValue(data);
+      throw Error("Auth failed");
     } catch (e) {
       console.log("Error", e.response.data);
-      return thunkAPI.rejectWithValue(e.response.data);
+      throw e;
     }
-  },
+  }
 );
 type User = {
   username: string;
@@ -145,7 +145,7 @@ export const userSlice = createSlice({
           state.authState = "logged_in";
           state.user.email = payload.email;
           state.user.username = payload.username;
-        },
+        }
       )
       .addCase(signupUser.pending, (state) => {
         state.authState = "loading";
@@ -158,11 +158,11 @@ export const userSlice = createSlice({
             payload,
           }: PayloadAction<{
             message: string;
-          }>,
+          }>
         ) => {
           state.authState = "error";
           state.error = payload.message;
-        },
+        }
       )
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.email = payload.email;

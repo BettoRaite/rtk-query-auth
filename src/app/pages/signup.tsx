@@ -10,6 +10,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+export function HydrateFallback() {
+  return <p>Loading Game...</p>;
+}
 const Signup = () => {
   const dispatch = useDispatch();
   const {

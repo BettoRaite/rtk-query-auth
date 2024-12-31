@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@react-router/node": "^7.1.1",
     "@reduxjs/toolkit": "^2.5.0",
     "@vitejs/plugin-react-swc": "^3.7.2",
+    "isbot": "^5",
     "nodemon": "^3.1.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -19,7 +21,7 @@
     "vite-tsconfig-paths": "^5.1.4"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "react-router dev",
     "build": "tsc && vite build",
     "serve": "vite preview"
   },
@@ -36,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "@react-router/dev": "^7.1.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "autoprefixer": "^10.4.20",
