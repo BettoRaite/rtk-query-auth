@@ -2,33 +2,27 @@
   "name": "redux-user-flow",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@craco/craco": "^7.1.0",
     "@reduxjs/toolkit": "^2.5.0",
-    "@tailwindcss/postcss7-compat": "^2.2.17",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
-    "@testing-library/user-event": "^14.5.2",
-    "autoprefixer": "^10.4.20",
+    "@vitejs/plugin-react-swc": "^3.7.2",
     "nodemon": "^3.1.9",
-    "postcss": "^8.4.49",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.54.2",
     "react-hot-toast": "^2.4.1",
     "react-loader-spinner": "^6.1.6",
     "react-redux": "^9.2.0",
+    "react-router": "^7.1.1",
     "react-router-dom": "^7.1.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
+    "vite": "^6.0.6",
+    "vite-plugin-svgr": "^4.3.0",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "browserslist": {
     "production": [
@@ -41,5 +35,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17"
   }
 }
