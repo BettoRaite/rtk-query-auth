@@ -10,8 +10,8 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route index element={<PrivateRoute component={Dashboard} />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route index path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </div>

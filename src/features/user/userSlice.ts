@@ -7,7 +7,12 @@ import type { RootState, AppDispatch } from "@/store/store";
 import { createAppAsyncThunk } from "@/store/typed";
 import type { UserCredentials } from "@/lib/types/auth";
 
-const AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL;
+const { VITE_AUTH_API_URL: AUTH_API_URL } = (
+  import.meta as unknown as {
+    env: { VITE_AUTH_API_URL: string };
+  }
+).env;
+
 if (!AUTH_API_URL) {
   throw TypeError("missing AUTH_API_URL");
 }

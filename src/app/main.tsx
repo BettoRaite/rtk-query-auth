@@ -4,17 +4,21 @@ import "./globals.css";
 import App from "./App";
 import store from "@/store/store";
 import { Provider } from "react-redux";
-import * as serviceWorker from "@/serviceWorker";
-import toast, { Toaster } from "react-hot-toast";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter as Router } from "react-router";
 
-ReactDOM.render(
+const rootElement = document.getElementById("root") as HTMLElement;
+const root = createRoot(rootElement);
+
+root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <App />
+      </Router>
       {/* <Toaster /> */}
     </Provider>
   </React.StrictMode>,
-  document.getElementById("root"),
 );
 
 // If you want your app to work offline and load faster, you can change
