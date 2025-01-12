@@ -52,7 +52,7 @@ To run the application, you will need two backends: one for authentication and a
 
 ## Docker
 
-To run the application using Docker, execute the following command:
+If you're on linux to run the application using Docker, execute the following command:
 
 ```bash
 sudo docker compose up
