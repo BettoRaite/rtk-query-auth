@@ -6,7 +6,7 @@ import type {
   ResponseWithAccessToken,
 } from "@/lib/types/response";
 import { createFetchBase } from "@/lib/utils/createFetchBase";
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi, retry } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
   reducerPath: "authApi",

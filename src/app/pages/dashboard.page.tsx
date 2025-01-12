@@ -13,37 +13,26 @@ export default function Dashboard() {
   const { user, authState, accessToken } = useAppSelector(authSelector);
   const [getUser, { isError: isUserError, error: userError }] =
     useGetUserMutation();
-  const [getRefresh, { isError: isRefreshError, error: refreshError }] =
-    useRefreshMutation();
   const [logoutUser, { isLoading: isLogoutLoading }] = useLogoutUserMutation();
-
   useEffect(() => {
-    if (isUserError || isRefreshError) {
-      const errorMessage = userError || refreshError;
+    // Failed to fetch user
+    if (isUserError) {
+      const errorMessage = userError;
       if (errorMessage) {
         toast(errorMessage);
       }
-      dispatch(setAuth({ authState: "unauthenticated" }));
-      navigate("/signup");
+      // Resetting auth and going back to login page
+      dispatch(setAuth({ authState: "idle" }));
+      navigate("/login");
     }
-  }, [
-    isUserError,
-    isRefreshError,
-    userError,
-    refreshError,
-    dispatch,
-    navigate,
-  ]);
+  }, [isUserError, userError, dispatch, navigate]);
 
-  // Refresh token and fetch user data if necessary
+  // Fetching user data
   useEffect(() => {
-    if (!accessToken) {
-      getRefresh();
-    }
-    if (accessToken && !user) {
+    if (!user) {
       getUser();
     }
-  }, [user, accessToken, getUser, getRefresh]);
+  }, [user, getUser]);
 
   function handleLogout() {
     logoutUser().catch(() => {
@@ -51,6 +40,7 @@ export default function Dashboard() {
     });
     navigate("/");
   }
+
   const { name, createdAt, email, emailVerified } = user ?? {};
 
   return (

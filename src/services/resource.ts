@@ -33,6 +33,7 @@ export const resourceApi = createApi({
         // Which is a valid reason, hence skip and not log error
         if (status === "PARSING_ERROR") return "";
         if (status === 503) return "Server is down";
+        if (status === "TIMEOUT_ERROR") return "Failed to refresh tokens";
         return message ?? "Failed to load user";
       },
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {

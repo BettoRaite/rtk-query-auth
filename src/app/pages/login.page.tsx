@@ -18,7 +18,6 @@ export default function Login() {
     handleSubmit,
   } = useForm<UserLoginCredentials>();
   const { authState } = useAppSelector(authSelector);
-
   useEffect(() => {
     if (isError) {
       toast.error(error);

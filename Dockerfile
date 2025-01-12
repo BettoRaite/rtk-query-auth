@@ -1,56 +1,60 @@
-# Base image for building the application
-FROM node:22-alpine3.21 AS builder
-
-# Install pnpm globally
-RUN npm install -g pnpm
-
-# Install required packages
-RUN apk add --no-cache libc6-compat git
-
-# Set up pnpm environment
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+# Base image for all stages
+FROM node:20-alpine AS base
 
 # Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
-
-# Copy application source code
-COPY . .
-
-# Build the application
-RUN pnpm run build
-
-
-# Development stage for running the application in development mode
-FROM node:22-alpine3.21 AS dev
-
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Install required packages for development
-RUN apk add --no-cache libc6-compat git
+# Development stage
+FROM base AS dev
 
-# Set up pnpm environment
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-
-# Set the working directory for development
-WORKDIR /app
-
-# Copy package files and install all dependencies (including dev dependencies)
+# Copy only package files for dependency installation
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
 
-RUN mkdir -p /home/viteuser/.cache/node/corepack/v1
-# Copy application source code
+# Install development dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy application source code for development
 COPY . .
 
-# Expose the port for the Vite app in development mode
-EXPOSE 5173
+# Production stage
+FROM base AS prod
 
-# Run the Vite app in development mode
-CMD ["pnpm", "run", "dev"]
+# Copy only package files for production dependency installation
+COPY package.json pnpm-lock.yaml ./
+
+# Install production dependencies
+RUN pnpm install --prod --frozen-lockfile
+
+# Build stage
+FROM base AS build
+
+# Copy only package files again to ensure we have the latest versions
+COPY package.json pnpm-lock.yaml ./
+
+# Copy node_modules from the dev stage to build the application
+COPY --from=dev /app/node_modules ./node_modules
+
+# Copy application source code and build the application
+COPY . .
+RUN pnpm build
+
+# Final stage for running the application
+FROM base
+
+# Copy only necessary files from the production and build stages
+COPY package.json pnpm-lock.yaml ./
+COPY --from=prod /app/node_modules ./node_modules
+COPY --from=build /app/build ./build
+
+# Set a non-root user for security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Set environment variables (optional)
+ENV NODE_ENV=production
+
+# Command to run the application
+CMD ["pnpm", "start"]

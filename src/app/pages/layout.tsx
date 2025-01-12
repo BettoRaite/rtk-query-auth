@@ -1,5 +1,6 @@
 import { useRefreshMutation } from "@/services/auth";
 import { useAppDispatch } from "@/store/typed";
+import { retry } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { Outlet } from "react-router";
@@ -12,6 +13,15 @@ export default function Layout() {
   const dispatch = useAppDispatch();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [trigger, { error, isError }] = useRefreshMutation();
+
+  // It's important that we get an access token as soon as user
+  // open
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <do not need track the fn>
+  useEffect(() => {
+    // Making a refresh request, if there is no error
+    trigger();
+  }, []);
+
   useEffect(() => {
     if (!isOnline) {
       toast.error("No internet connection");
@@ -33,17 +43,6 @@ export default function Layout() {
       window.removeEventListener("offline", updateOnlineStatus);
     };
   }, []);
-  // Doing a check whether user has already been signed in
-  // And has an active account, which we need to load.
-  useEffect(() => {
-    // By default in dev mode react remounts component.
-    // In order to prevent potential bugs with useEffect
-    // This in turn introduces a problem for us
-    // Which is making a req to auth server with the same refresh token
-    if (!isError) {
-      trigger();
-    }
-  }, [trigger, isError]);
 
   return (
     <div className="flex justify-center items-center min-h-dvh  bg-gray-50">

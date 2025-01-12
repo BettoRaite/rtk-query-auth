@@ -1,7 +1,8 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { Provider } from "react-redux";
 import store from "@/store/store";
-
+import { useEffect } from "react";
+import { retry } from "@reduxjs/toolkit/query";
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
